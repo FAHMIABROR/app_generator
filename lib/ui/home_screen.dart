@@ -70,22 +70,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Schedule Generator")),
+      appBar: AppBar(
+        title: Text("Schedule Generator"),
+        backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             TextField(
               controller: taskController,
-              decoration: InputDecoration(labelText: "Nama Tugas"),
+              decoration: InputDecoration(
+                labelText: "Nama Tugas",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
             ),
+            SizedBox(height: 10),
             TextField(
               controller: durationController,
-              decoration: InputDecoration(labelText: "Durasi (menit)"),
+              decoration: InputDecoration(
+                labelText: "Durasi (menit)",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
               keyboardType: TextInputType.number,
             ),
-            DropdownButton<String>(
+            SizedBox(height: 10),
+            DropdownButtonFormField<String>(
               value: priority,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
               hint: Text("Pilih Prioritas"),
               onChanged: (value) => setState(() => priority = value),
               items: ["Tinggi", "Sedang", "Rendah"]
@@ -93,31 +108,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: priorityMember, child: Text(priorityMember)))
                   .toList(),
             ),
+            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: _addTask,
-                  child: Text("Tambahkan Tugas"),
+                  icon: Icon(Icons.add),
+                  label: Text("Tambahkan"),
                 ),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: _clearTasks,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  child: Text("Hapus Semua",
-                      style: TextStyle(color: Colors.white)),
+                  icon: Icon(Icons.delete),
+                  label: Text("Hapus Semua"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 15),
             Expanded(
               child: ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   final task = tasks[index];
                   return Card(
-                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 5,
                     margin: EdgeInsets.symmetric(vertical: 6),
                     child: ListTile(
-                      title: Text("${task['name']}"),
+                      contentPadding: EdgeInsets.all(16),
+                      leading: Icon(Icons.task, color: Colors.blueAccent),
+                      title: Text(
+                        "${task['name']}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Text(
                           "Prioritas: ${task['priority']} | Durasi: ${task['duration']} menit"),
                     ),
@@ -127,9 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             isLoading
                 ? CircularProgressIndicator()
-                : ElevatedButton(
+                : ElevatedButton.icon(
                     onPressed: _generateSchedule,
-                    child: Text("Generate Schedule"),
+                    icon: Icon(Icons.schedule),
+                    label: Text("Generate Schedule"),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      textStyle: TextStyle(fontSize: 16),
+                    ),
                   ),
           ],
         ),
